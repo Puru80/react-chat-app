@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Button, Input } from "antd";
 
 const ChatFooter = ({ socket }) => {
   const [message, setMessage] = useState("");
@@ -30,11 +31,6 @@ const ChatFooter = ({ socket }) => {
     handleTyping();
   };
 
-  // const handleTyping = () => {
-  //   if(message === "") return;
-  //   socket.emit("typing", { socketId: `${socket.id}` });
-  // };
-
   const handleTyping = () => {
     if (!isTyping) {
       setIsTyping(true);
@@ -42,7 +38,7 @@ const ChatFooter = ({ socket }) => {
     }
 
     clearTimeout(timeoutRef.current);
-    
+
     timeoutRef.current = setTimeout(() => {
       setIsTyping(false);
       socket.emit("typing", isTyping); // Emit typing stopped event
@@ -52,7 +48,7 @@ const ChatFooter = ({ socket }) => {
   return (
     <div className="chat__footer">
       <form className="form" onSubmit={handleSendMessage}>
-        <input
+        <Input
           type="text"
           placeholder="Write message"
           className="message"
@@ -60,7 +56,9 @@ const ChatFooter = ({ socket }) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyUp={handleTyping}
         />
-        <button className="sendBtn">SEND</button>
+        <Button type="primary" htmlType="submit" className="sendBtn">
+          SEND
+        </Button>
       </form>
     </div>
   );

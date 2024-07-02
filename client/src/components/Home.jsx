@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import { Button, Input } from "antd";
 
 const Home = ({socket}) => {
   const navigate = useNavigate();
@@ -19,7 +20,8 @@ const Home = ({socket}) => {
     <form className="home__container" onSubmit={handleSubmit}>
       <h2 className="home__header">SignIn to Open Text</h2>
       <label htmlFor="userName">UserName</label>
-      <input
+      <Input
+        placeholder="Enter your username"
         type="text"
         minLength={6}
         name="username"
@@ -28,7 +30,7 @@ const Home = ({socket}) => {
         value={username}
         onChange={(e) => setUserName(e.target.value)}
       />
-      <button className="home__cta">SIGN IN</button>
+      <Button type="primary" htmlType="submit" className="home__cta">SIGN IN</Button>
     </form>
   );
 };

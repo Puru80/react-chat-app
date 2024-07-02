@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import { Button } from "antd";
 
 const ChatBody = ({ messages, typingStatus, lastMessageRef, socket }) => {
   const navigate = useNavigate();
@@ -29,9 +30,9 @@ const ChatBody = ({ messages, typingStatus, lastMessageRef, socket }) => {
     <>
       <header className="chat__mainHeader">
         <p>Hangout With Sockets</p>
-        <button className="leaveChat__btn" onClick={handleLeaveChat}>
+        <Button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
-        </button>
+        </Button>
       </header>
 
       <div className="message__container">
@@ -52,14 +53,6 @@ const ChatBody = ({ messages, typingStatus, lastMessageRef, socket }) => {
             </div>
           )
         )}
-
-        {/* {<div className="message__status">
-          {typingStatus &&
-          typingStatus.userName &&
-          typingStatus.userName.length > 0 ? (
-            <p>{typingStatus.userName} is typing...</p>
-          ) : null}
-        </div>} */}
 
         <div>
           {renderTypingIndicator()}
