@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const ChatFooter = ({ socket }) => {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     socket.on("newUserResponse", (data) => {
@@ -24,12 +26,27 @@ const ChatFooter = ({ socket }) => {
     }
     setMessage("");
 
+    setIsTyping(false);
     handleTyping();
   };
 
+  // const handleTyping = () => {
+  //   if(message === "") return;
+  //   socket.emit("typing", { socketId: `${socket.id}` });
+  // };
+
   const handleTyping = () => {
-    if(message === "") return;
-    socket.emit("typing", { socketId: `${socket.id}` });
+    if (!isTyping) {
+      setIsTyping(true);
+      socket.emit("typing", isTyping); // Emit typing event to server
+    }
+
+    clearTimeout(timeoutRef.current);
+    
+    timeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      socket.emit("typing", isTyping); // Emit typing stopped event
+    }, 5000); // Reset typing status after 2s of inactivity
   };
 
   return (
@@ -41,7 +58,7 @@ const ChatFooter = ({ socket }) => {
           className="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleTyping}
+          onKeyUp={handleTyping}
         />
         <button className="sendBtn">SEND</button>
       </form>

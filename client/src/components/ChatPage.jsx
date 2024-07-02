@@ -6,7 +6,7 @@ import "../index.css";
 
 const ChatPage = ({ socket }) => {
   const [messages, setMessages] = useState([]);
-  const [typingStatus, setTypingStatus] = useState("");
+  const [typingStatus, setTypingStatus] = useState({});
   const lastMessageRef = useRef(null);
 
   useEffect(() => {
@@ -14,7 +14,10 @@ const ChatPage = ({ socket }) => {
   }, [socket, messages]);
 
   useEffect(() => {
-    socket.on("typingResponse", (data) => setTypingStatus(data));
+    socket.on("typingResponse", (data) => {
+      console.log("typingResponse", data);
+      setTypingStatus(data)
+    });
   }, [socket]);
 
   useEffect(() => {

@@ -11,6 +11,20 @@ const ChatBody = ({ messages, typingStatus, lastMessageRef, socket }) => {
     window.location.reload();
   };
 
+  function renderTypingIndicator() {
+    const typingUsername = typingStatus.userName; // Get username of typing user
+
+    if (typingUsername && typingUsername.length > 0) {
+      return (
+        <div className="message__status">
+          {typingUsername} is typing...
+        </div>
+      );
+    }
+
+    return null; // No typing indicator if no users are typing
+  }
+
   return (
     <>
       <header className="chat__mainHeader">
@@ -39,20 +53,17 @@ const ChatBody = ({ messages, typingStatus, lastMessageRef, socket }) => {
           )
         )}
 
-        <div className="message__status">
-          {console.log("typingStatus", typingStatus)}
-          {typingStatus && typingStatus.userName &&
+        {/* {<div className="message__status">
+          {typingStatus &&
+          typingStatus.userName &&
           typingStatus.userName.length > 0 ? (
             <p>{typingStatus.userName} is typing...</p>
           ) : null}
-        </div>
+        </div>} */}
 
-        {/* {
-            
-           (<div className="message__status">
-            <p>{typingStatus.userName} is typing...</p>
-          </div>) : null
-        } */}
+        <div>
+          {renderTypingIndicator()}
+        </div>
 
         <div ref={lastMessageRef} />
       </div>
