@@ -10,8 +10,17 @@ const ChatPage = ({ socket }) => {
   const lastMessageRef = useRef(null);
 
   useEffect(() => {
-    socket.on("messageResponse", (data) => setMessages([...messages, data]));
+    socket.on("messageResponse", (data) => 
+      setMessages([...messages, data]));
+
   }, [socket, messages]);
+
+  useEffect(() => {
+    socket.on("initialMessages", (initialMessages) => {
+      console.log("initialMessages: ", initialMessages);
+      setMessages(initialMessages);
+    });
+  }, [socket]);
 
   useEffect(() => {
     socket.on("typingResponse", (data) => {

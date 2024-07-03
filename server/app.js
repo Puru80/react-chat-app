@@ -14,31 +14,26 @@ const socketIO = new Server(server, {
 });
 
 let users = [];
-const typingUsers = {};
+let messages = [];
 
 socketIO.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
+  socket.emit("initialMessages", messages);
+
   socket.on("newUser", (data) => {
     users.push(data);
     socketIO.emit("newUserResponse", users);
+    socket.emit("initialMessages", messages);
   });
 
   socket.on('message', (data) => {
     console.log('Data: ', data);
+    messages.push(data);
     socketIO.emit('messageResponse', data);
   });
 
   socket.on("typing", (isTyping) => {
-    /*if(data.socketId === undefined) {
-      console.log('Typing But Undefined: ', data)
-      return;
-    }
-
-    console.log('Typing: ', data)
-    let user = users.find(user => user.socketId === data.socketId);
-    console.log('User: ', user)
-    socket.broadcast.emit("typingResponse", {userName: user.userName});*/
 
     if(isTyping) {
       let user = users.find(user => user.socketId === socket.id);
