@@ -9,9 +9,13 @@ const Home = ({socket}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("userName", username);
 
-    socket.emit("newUser", {userName:username, socketId: socket.id});
+    let sessionId = `${Date.now()}-${Math.random()}`
+
+    window.sessionStorage.setItem("sessionId", sessionId);
+    window.sessionStorage.setItem("username", username);
+
+    socket.emit("newUser", {sessionId: sessionId, userName:username});
 
     navigate("/chat");
   }

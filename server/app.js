@@ -10,7 +10,8 @@ const server = http.createServer(app);
 const socketIO = new Server(server, {
   cors: {
     origin: "*"
-  }
+  },
+  connectionStateRecovery: {}
 });
 
 let users = [];
@@ -22,21 +23,42 @@ socketIO.on('connection', (socket) => {
   socket.emit("initialMessages", messages);
 
   socket.on("newUser", (data) => {
+    data.socketId = socket.id;
     users.push(data);
-    socketIO.emit("newUserResponse", users);
+    socketIO.emit("user list", users);
     socket.emit("initialMessages", messages);
   });
 
+  socket.on('reconnect_user', (data) => {
+    /*const { sessionId, username } = data;
+
+    if (sessionId) {
+      users[socket.id] = { sessionId, username };
+      socketIO.emit('user list', Object.values(users).map(user => user.username));
+    } */
+
+    data.socketId = socket.id;
+
+    if(users.find(user => user.sessionId === data.sessionId)) {
+      return ;
+    }
+
+    console.log('Reconnect user: ', data)
+
+    users.push(data);
+    socketIO.emit("user list", users);
+  });
+
   socket.on('message', (data) => {
-    console.log('Data: ', data);
+    console.log('Message: ', data);
     messages.push(data);
     socketIO.emit('messageResponse', data);
   });
 
-  socket.on("typing", (isTyping) => {
+  socket.on("typing", (data) => {
 
-    if(isTyping) {
-      let user = users.find(user => user.socketId === socket.id);
+    if(data.isTyping) {
+      let user = users.find(user => user.sessionId === data.sessionId);
       console.log('User: ', user)
       socket.broadcast.emit("typingResponse", {userName: user.userName})
     } else {

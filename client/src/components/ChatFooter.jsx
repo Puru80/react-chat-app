@@ -8,7 +8,7 @@ const ChatFooter = ({ socket }) => {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    socket.on("newUserResponse", (data) => {
+    socket.on("user list", (data) => {
       setUsers(data);
     });
   }, [socket, users]);
@@ -34,19 +34,25 @@ const ChatFooter = ({ socket }) => {
   const handleTyping = () => {
     if (!isTyping) {
       setIsTyping(true);
-      socket.emit("typing", isTyping); // Emit typing event to server
+      // Emit typing event to server
+      socket.emit("typing", {isTyping: isTyping, sessionId: window.sessionStorage.getItem('sessionId')}); 
     }
 
     clearTimeout(timeoutRef.current);
 
     timeoutRef.current = setTimeout(() => {
       setIsTyping(false);
-      socket.emit("typing", isTyping); // Emit typing stopped event
+      // Emit typing stopped event to server
+      socket.emit("typing", {
+        isTyping: isTyping,
+        sessionId: window.sessionStorage.getItem("sessionId"),
+      });
     }, 5000); // Reset typing status after 2s of inactivity
   };
 
   return (
     <div className="chat__footer">
+      {/* <div className="message__status">Message Status</div> */}
       <form className="form" onSubmit={handleSendMessage}>
         <Input
           type="text"

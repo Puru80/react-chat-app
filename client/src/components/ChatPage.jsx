@@ -7,7 +7,19 @@ import "../index.css";
 const ChatPage = ({ socket }) => {
   const [messages, setMessages] = useState([]);
   const [typingStatus, setTypingStatus] = useState({});
+  const [username, setUsername] = useState("");
   const lastMessageRef = useRef(null);
+
+  useEffect(() => {
+    // Check for session ID and username in local storage
+    const storedSessionId = window.sessionStorage.getItem('sessionId');
+    const storedUsername = window.sessionStorage.getItem('username');
+
+    if (storedSessionId && storedUsername) {
+      socket.emit('reconnect_user', { sessionId: storedSessionId, userName: storedUsername });
+      setUsername(storedUsername);
+    }
+  }, [socket]);
 
   useEffect(() => {
     socket.on("messageResponse", (data) => 
