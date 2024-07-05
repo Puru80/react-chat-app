@@ -14,8 +14,8 @@ const socketIO = new Server(server, {
   connectionStateRecovery: {}
 });
 
-let users = [];
-let messages = [];
+const users = [];
+const messages = [];
 
 socketIO.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
@@ -68,8 +68,9 @@ socketIO.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    users = users.filter(user => user.socketId !== socket.id);
-    socketIO.emit("newUserResponse", users);
+    // users = users.filter(user => user.socketId !== socket.id);
+
+    socketIO.emit("newUserResponse", users.filter(user => user.socketId !== socket.id));
 
     socket.disconnect();
 
