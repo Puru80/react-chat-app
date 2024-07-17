@@ -2,24 +2,22 @@ import {Link} from "react-router-dom";
 import axios from 'axios'
 import {useNavigate} from "react-router-dom";
 import {Button, Form, Input} from "antd";
-import React from "react";
 
 function Login() {
 
     const navigate = useNavigate()
 
     const onFinish = (e, values) => {
-        console.log('Success:', values);
-        e.preventDefault()
-        axios.post('http://localhost:8080/api/users/login', values)
+        // e.preventDefault()
+        axios.post('http://localhost:8080/api/v1/users/login', values)
             .then((result) => {
                 console.log(result)
-                if (result.data === "Success") {
+                if (result.status === 201) {
+                    alert("You are logged in")
                     navigate("/home")
                 } else {
-                    navigate("/register")
                     alert("You are not registered to this service")
-
+                    navigate("/home")
                 }
             })
             .catch((err) => {
@@ -87,7 +85,7 @@ function Login() {
                         }}
                     >
                         <Button type="primary" htmlType="submit" className={"btn btn-success"}>
-                            SignUp
+                            LogIn
                         </Button>
                     </Form.Item>
                 </Form>

@@ -8,20 +8,21 @@ import {Button, Form, Input} from "antd";
 const SignUp = () => {
     const navigate = useNavigate()
 
-    const onFinish = (e, values) => {
+    const onFinish = (values) => {
         console.log('Success:', values);
-        e.preventDefault()
-        axios.post('http://localhost:8080/api/users/signup', values)
+        axios.post('http://localhost:8080/api/v1/users/signup', values)
             .then((res) => {
                 console.log(res.data)
+                alert("You are registered")
                 navigate('/login')
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err.message)
             })
     };
+
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        console.log('Failed:', errorInfo.message);
     };
 
     return (
@@ -91,7 +92,7 @@ const SignUp = () => {
                 >
                     <Form.Item
                         label="Username"
-                        name="username"
+                        name="userName"
                         rules={[
                             {
                                 required: true,

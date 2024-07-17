@@ -16,9 +16,10 @@ function App() {
       <div>
         <Routes>
           {/*<Route path="/" element={<Home socket={socket} />}></Route>*/}
-          <Route path="/" element={<Navigate to="/register" replace />}></Route>
+          <Route path="/" element={<Navigate to="/login" replace />}></Route>
           <Route path="/register" element={<SignUp/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
+          <Route path="/home" element={<Home socket={socket} />}></Route>
           <Route path="/chat" element={<ChatPage socket={socket} />}></Route>
         </Routes>
       </div>
